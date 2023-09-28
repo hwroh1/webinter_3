@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>~점메추~</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .image {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="wordDisplay"></div>
+    <script>
+        
+        const NUM_IMAGES = 5;
+        const FPS = 60;
+
+        const images = [];
+
+        function setRandomSize(image) {
+            const minSize = 60; 
+            const maxSize = 150;
+            const size = Math.random() * (maxSize - minSize) + minSize;
+            image.style.width = `${size}px`;
+            image.style.height = `${size}px`;
+        }
+
+        function createImage() {
+            const image = document.createElement('div');
+            image.className = 'image';
+            image.style.backgroundImage = "url('./gacha.png')";
+            image.style.backgroundSize = 'cover';
+            setRandomSize(image);
+            document.body.appendChild(image);
+            return image;
+        }
+
+        for (let i = 0; i < NUM_IMAGES; i++) {
+            const image = createImage();
+            image.style.left = `${Math.random() * (window.innerWidth - image.offsetWidth)}px`;
+            image.style.top = `${Math.random() * (window.innerHeight - image.offsetHeight)}px`;
+            images.push(image);
+        }
+
+        const randomWords = ["호노야", "알러이", "온달네", "찬이네 곱창", "제일콩집", "기린라멘", "네코정", "휴돈정", "개기일식", "쪼매떡", "페페그라노", "칠리앤페퍼", "아소코", "일상다반"];
+
+        function displayRandomWord() {
+            const wordDisplay = document.getElementById('wordDisplay');
+            const randomIndex = Math.floor(Math.random() * randomWords.length);
+            const randomWord = randomWords[randomIndex];
+            alert("오늘은 " + randomWord + " 어떠세요");
+        }
+
+        for (const image of images) {
+            image.addEventListener('click', displayRandomWord);
+        }
+
+        function gameLoop() {
+            for (const image of images) {
+                const x = parseFloat(image.style.left);
+                let y = parseFloat(image.style.top);
+                y += 2;
+
+                if (y >= window.innerHeight) {
+                    setRandomSize(image);
+                    image.style.left = `${Math.random() * (window.innerWidth - image.offsetWidth)}px`;
+                    y = -parseFloat(image.style.height);
+                }
+
+                image.style.top = `${y}px`;
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
